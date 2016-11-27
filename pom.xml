@@ -84,6 +84,7 @@
             </configuration>
             <goals>
               <goal>javadoc</goal>
+              <goal>jar</goal>
             </goals>
           </execution>
         </executions>
@@ -126,4 +127,11 @@
       <version>20151123</version>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray-repo-maven-example</id>
+      <url>https://api.bintray.com/maven/tamarjfrog/maven-repo/maven-example/;publish=1</url>
+    </repository>
+  </distributionManagement>
 </project>
