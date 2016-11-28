@@ -7,7 +7,7 @@
   <version>0.6.7</version>
   <packaging>jar</packaging>
 
-  <name>utils</name>
+  <!--<name>utils</name>-->
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,30 +88,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin><plugin>
-      <groupId>org.sonatype.plugins</groupId>
-      <artifactId>jarjar-maven-plugin</artifactId>
-      <executions>
-        <execution>
-          <phase>package</phase>
-          <goals>
-            <goal>jarjar</goal>
-          </goals>
-          <configuration>
-            <includes>
-              <include>org.json:json</include>
-              <include>insogroup:utils</include>
-            </includes>
-            <rules>
-              <rule>
-                <pattern>org.json.**</pattern>
-                <result>org.json.newest.@1</result>
-              </rule>
-            </rules>
-          </configuration>
-        </execution>
-      </executions>
-    </plugin>
+      </plugin>
     </plugins>
   </build>
 
@@ -127,12 +104,4 @@
       <version>20151123</version>
     </dependency>
   </dependencies>
-
-  <distributionManagement>
-    <repository>
-      <id>bintray-insogroup-utils</id>
-      <name>insanusmokrassar-insogroup</name>
-      <url>https://api.bintray.com/maven/insogroup/utils/com.insogroup/;publish=1</url>
-    </repository>
-  </distributionManagement>
 </project>
