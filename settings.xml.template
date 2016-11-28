@@ -1,5 +1,0 @@
-<server>
-    <id>bintray-repo-maven-example</id>
-    <username>tamarjfrog</username>
-    <password>***my-top-secret-api-key***</password>
-</server>
