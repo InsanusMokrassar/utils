@@ -7,7 +7,16 @@
   <version>0.6.7</version>
   <packaging>jar</packaging>
 
-  <!--<name>utils</name>-->
+  <name>Utils</name>
+  <description>Library was created as utils for usual needs</description>
+  <url>https://github.com/insogroup/utils</url>
+  <scm></scm>
+  <developers>
+    <developer>
+      <name>Ovsyannikov Alexey</name>
+      <email>ovsyannikov.alexey95@gmail.com</email>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,29 +33,6 @@
           <target>1.7</target>
           <compilerArgument>-proc:none</compilerArgument>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.5.5</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>insogroup.utils.App</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -104,4 +90,12 @@
       <version>20151123</version>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray-insogroup-InsoGroupRepository</id>
+      <name>insogroup-InsoGroupRepository</name>
+      <url>https://api.bintray.com/maven/insogroup/InsoGroupRepository/utils/;publish=1</url>
+    </repository>
+  </distributionManagement>
 </project>
