@@ -10,13 +10,24 @@
   <name>Utils</name>
   <description>Library was created as utils for usual needs</description>
   <url>https://github.com/insogroup/utils</url>
-  <scm></scm>
   <developers>
     <developer>
       <name>Ovsyannikov Alexey</name>
       <email>ovsyannikov.alexey95@gmail.com</email>
     </developer>
   </developers>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://github.com/insogroup/utils/blob/master/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>https://github.com/insogroup/utils</url>
+    <tag>HEAD</tag>
+    <developerConnection>scm:git:[fetch=]https://github.com/insogroup/utils.git[push=]ssh:git@github.com:insogroup/utils.git</developerConnection>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,6 +82,20 @@
             <goals>
               <goal>javadoc</goal>
               <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
             </goals>
           </execution>
         </executions>
