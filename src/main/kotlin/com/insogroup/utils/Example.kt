@@ -33,10 +33,18 @@ private val exampleOfCustomStrategyInitializerConfig = "{\n" +
         "}\n"
 
 /**
+ * Add environment variable "OUTPUT_DIR" to get out files in specific directory.
  * Add environment variable "DOWNLOAD_FILE" with link to some remote file to download it.
  */
 @Throws(IOException::class)
 fun main(args: Array<String>) {
+
+    val outputDirectory: String
+    if (System.getenv("OUTPUT_DIR") == null) {
+        outputDirectory = System.getenv("PWD")
+    } else {
+        outputDirectory = System.getenv("OUTPUT_DIR")
+    }
 
     val IOC = IOC()
 
@@ -69,6 +77,6 @@ fun main(args: Array<String>) {
             whyNot: String? ->
             outputStreamCallback("Can't download file \"$url\" fore next reason:\"$whyNot\"")
         })
-        fileDownloader.downloadFile(System.getenv("PWD"), downloadFile)
+        fileDownloader.downloadFile(outputDirectory, downloadFile)
     }
 }
