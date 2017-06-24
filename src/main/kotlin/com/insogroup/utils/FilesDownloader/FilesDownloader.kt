@@ -9,7 +9,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.ArrayList
+import java.util.*
 
 class FilesDownloader {
 
@@ -24,13 +24,17 @@ class FilesDownloader {
      */
     protected var downloadFailureListeners: MutableList<(String, String?) -> Unit> = ArrayList()
 
+    constructor() {
+        fileNameGenerator = PatternFileNameGenerator(Regex("[-a-zA-Z0-9+&@#%?=~_|!:,.;]+(\\.[-a-zA-Z0-9+&@#%?=~_|!:,.;]+)*(\\/[-a-zA-Z0-9+&@#%?=~_|!:,.;]+(\\.[-a-zA-Z0-9+&@#%?=~_|!:,.;]+)*)*$"))
+    }
+
     /**
      * @param pattern
      * * <pre>
      * *     The pattern is a string with regexp for finding filename in src url
      * * </pre>
      */
-    constructor(pattern: String) {
+    constructor(pattern: Regex) {
         fileNameGenerator = PatternFileNameGenerator(pattern)
     }
 
@@ -77,13 +81,9 @@ class FilesDownloader {
         urlConnection.requestMethod = "GET"
         urlConnection.connect()
 
-        val folder = File(rootFolder)
+        val file = File(rootFolder, fileNameGenerator.generateName(urlString))
 
-        val file = File(rootFolder, getFileName(urlString))
-
-        if (!folder.exists()) {
-            folder.mkdirs()
-        }
+        createFolders(file.absolutePath)
 
         if (file.exists()) {
             return file.absolutePath
@@ -106,12 +106,25 @@ class FilesDownloader {
         fos.close()
         inputStream.close()
 
+        notifyComplete(urlString, file.absolutePath)
+
         return file.absolutePath
     }
 
-    @Throws(GenerateFileNameException::class)
-    protected fun getFileName(url: String): String {
-        return fileNameGenerator.generateName(url)
+    @Throws(IllegalStateException::class)
+    protected fun createFolders(absolutePath: String) {
+        var rootPath = ""
+        absolutePath.folders().forEach {
+            val file = File(rootPath, it)
+            if (file.exists()) {
+                if (!file.isDirectory) {
+                    throw IllegalStateException("Can't create file for ${file.absolutePath}: it is not directory.")
+                }
+            } else {
+                file.mkdir()
+            }
+            rootPath = "$rootPath/$it"
+        }
     }
 
     protected fun notifyComplete(url: String, path: String) {
@@ -141,4 +154,9 @@ class FilesDownloader {
     fun unSubscribeFailure(listener: (String, String?) -> Unit) {
         downloadFailureListeners.remove(listener)
     }
+}
+
+private fun String.folders(): List<String> {
+    val splitted = split("/")
+    return splitted.minus(splitted.last())
 }

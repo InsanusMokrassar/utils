@@ -1,6 +1,7 @@
 package com.insogroup.utils
 
 import com.github.insanusmokrassar.iobjectk.realisations.SimpleIObject
+import com.insogroup.utils.FilesDownloader.FilesDownloader
 import com.insogroup.utils.IOC.IOC
 import com.insogroup.utils.IOC.interfaces.IOCStrategy
 import com.insogroup.utils.initialisator.realisations.StandardInitialisator
@@ -31,6 +32,9 @@ private val exampleOfCustomStrategyInitializerConfig = "{\n" +
         "   }\n" +
         "}\n"
 
+/**
+ * Add environment variable "DOWNLOAD_FILE" with link to some remote file to download it.
+ */
 @Throws(IOException::class)
 fun main(args: Array<String>) {
 
@@ -51,4 +55,20 @@ fun main(args: Array<String>) {
     })
 
     IOC.resolve<(String) -> Unit>("Example")("The instance which was get output it")
+
+    val downloadFile = System.getenv("DOWNLOAD_FILE")
+    if (downloadFile != null) {
+        val fileDownloader = FilesDownloader()
+        fileDownloader.subscribeSuccessful({
+            url:String,
+            path: String ->
+            outputStreamCallback("File \"$url\" successfully downloaded in \"$path\"")
+        })
+        fileDownloader.subscribeFailure({
+            url: String,
+            whyNot: String? ->
+            outputStreamCallback("Can't download file \"$url\" fore next reason:\"$whyNot\"")
+        })
+        fileDownloader.downloadFile(System.getenv("PWD"), downloadFile)
+    }
 }
