@@ -31,28 +31,38 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kotlin.version>1.1.2-4</kotlin.version>
+    <dokka.version>0.9.14</dokka.version>
   </properties>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/res</directory>
+        <includes>
+          <include>*</include>
+        </includes>
+      </resource>
+    </resources>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
     <plugins>
-      <!--Plugins for compiling-->
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-          <compilerArgument>-proc:none</compilerArgument>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <version>${kotlin.version}</version>
         <executions>
           <execution>
-            <id>attach-sources</id>
+            <id>compile</id>
+            <phase>compile</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
             </goals>
           </execution>
         </executions>
@@ -78,39 +88,73 @@
           </execution>
         </executions>
       </plugin>
+      <!--Plugins for compiling-->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.github.insanusmokrassar.AutoORM.ExampleKt</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
-        <configuration>
-          <show>public</show>
-        </configuration>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.6</version>
         <executions>
           <execution>
+            <id>make-assembly</id>
             <phase>package</phase>
+            <goals> <goal>single</goal> </goals>
             <configuration>
-              <show>public</show>
+              <archive>
+                <manifest>
+                  <mainClass>com.github.insanusmokrassar.AutoORM.ExampleKt</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
             <goals>
-              <goal>javadoc</goal>
               <goal>jar</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
+        <version>${dokka.version}</version>
         <executions>
           <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
+            <phase>package</phase>
             <goals>
-              <goal>sign</goal>
+              <goal>dokka</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <outputFormat>gfm</outputFormat>
+          <reportNotDocumented>true</reportNotDocumented>
+          <skipEmptyPackages>true</skipEmptyPackages>
+          <sourceDirectories>
+            <dir>${build.sourceDirectory}</dir>
+          </sourceDirectories>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -122,9 +166,14 @@
       <version>4.12</version>
     </dependency>
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20151123</version>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.insanusmokrassar</groupId>
+      <artifactId>iobjectk</artifactId>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 
