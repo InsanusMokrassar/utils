@@ -1,11 +1,56 @@
 package com.insogroup.utils.IOC
 
+import com.github.insanusmokrassar.iobjectk.exceptions.ReadException
+import com.github.insanusmokrassar.iobjectk.interfaces.IObject
 import com.insogroup.utils.ClassExtractor.exceptions.ClassExtractException
 import com.insogroup.utils.ClassExtractor.ClassExtractor
+import com.insogroup.utils.ClassExtractor.ClassExtractor.extract
 import com.insogroup.utils.IOC.exceptions.ResolveStrategyException
 import com.insogroup.utils.IOC.interfaces.IOCStrategy
 
 import java.util.HashMap
+
+val strategiesKey = "strategies"
+val nameKey = "name"
+val packageKey = "package"
+val configKey = "config"
+
+/**
+ * <pre>
+ *     {
+ *          "strategies": [
+ *              {
+ *                  "name": "NameOfStrategy",
+ *                  "package": "class.path.to.class.of.strategy",
+ *                  "config": any //optional, can be a list (will used as vararg of params), object or static value
+ *              }
+ *          ]
+ *     }
+ * </pre>
+ */
+@Throws(IllegalArgumentException::class)
+fun loadConfig(config: IObject<Any>, into: IOC = IOC()) {
+    val strategiesList = config.get<List<IObject<Any>>>(strategiesKey)
+    strategiesList.forEach {
+        val args: Array<Any>
+        if (it.keys().contains(configKey)) {
+            args = try {
+                it.get<List<Any>>(configKey).toTypedArray()
+            } catch (e: ReadException) {
+                arrayOf(it.get<Any>(configKey))
+            }
+        } else {
+            args = arrayOf()
+        }
+        into.register(
+                it.get(nameKey),
+                extract(
+                        it.get(packageKey),
+                        *args
+                )
+        )
+    }
+}
 
 /**
  * IOC container using for resolving some dependencies
