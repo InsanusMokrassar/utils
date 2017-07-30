@@ -6,7 +6,7 @@ import com.insogroup.utils.ClassExtractor.ClassExtractor
 import com.insogroup.utils.IOC.IOC
 import com.insogroup.utils.IOC.exceptions.ResolveStrategyException
 import com.insogroup.utils.IOC.interfaces.IOCStrategy
-import com.insogroup.utils.has
+import com.github.insanusmokrassar.iobjectk.interfaces.has
 import java.util.ArrayList
 import java.util.Arrays
 

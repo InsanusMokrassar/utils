@@ -1,10 +1,10 @@
 package com.insogroup.utils.IOC.strategies.IOCStrategiesWithGenerators
 
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
+import com.github.insanusmokrassar.iobjectk.interfaces.has
 import com.insogroup.utils.IOC.IOC
 import com.insogroup.utils.IOC.exceptions.ResolveStrategyException
 import com.insogroup.utils.IOC.interfaces.IOCStrategy
-import com.insogroup.utils.has
 import java.util.*
 
 class StandardCacheParamsIOCStrategy : IOCStrategy {
