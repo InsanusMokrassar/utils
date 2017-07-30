@@ -135,27 +135,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.jetbrains.dokka</groupId>
-        <artifactId>dokka-maven-plugin</artifactId>
-        <version>${dokka.version}</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>dokka</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <outputFormat>gfm</outputFormat>
-          <reportNotDocumented>true</reportNotDocumented>
-          <skipEmptyPackages>true</skipEmptyPackages>
-          <sourceDirectories>
-            <dir>${build.sourceDirectory}</dir>
-          </sourceDirectories>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -172,7 +151,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.insanusmokrassar</groupId>
-      <artifactId>iobjectk</artifactId>
+      <artifactId>IObjectK</artifactId>
       <version>1.0</version>
     </dependency>
   </dependencies>
