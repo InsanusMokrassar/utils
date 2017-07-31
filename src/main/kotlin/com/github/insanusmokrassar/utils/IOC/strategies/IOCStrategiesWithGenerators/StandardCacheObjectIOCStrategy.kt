@@ -4,37 +4,40 @@ import com.github.insanusmokrassar.iobjectk.interfaces.IObject
 import com.github.insanusmokrassar.utils.IOC.IOC
 import com.github.insanusmokrassar.utils.IOC.exceptions.ResolveStrategyException
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
+import com.github.insanusmokrassar.utils.IOCField
+import com.github.insanusmokrassar.utils.configField
+import com.github.insanusmokrassar.utils.presetField
+import com.github.insanusmokrassar.utils.strategyField
 import java.util.*
 
 class StandardCacheObjectIOCStrategy : IOCStrategy {
     protected var knownObjects: MutableMap<String, Any> = HashMap()
 
     protected var generator: IOCStrategy
-    protected val IOC: IOC
 
     /**
      * @param params
      * Await:
      * <pre>
      *     {
-     *         "targetGenerator" : "ioc name or canonical classpath",
-     *         "generatorParams" : object,//optional, if object need some args to create
-     *         "objectsPreset" : {
+     *         "strategy" : "ioc name or canonical classpath",
+     *         "config" : object,//optional, if object need some args to create
+     *         "preset" : {
      *         }
      *     }
      * </pre>
      */
-    constructor(IOC: IOC, params: IObject<Any>) {
-        this.IOC = IOC
-        val iocName = params.get<String>("targetGenerator")
-        if (params.keys().contains("generatorParams")) {
-            generator = IOC.resolve(iocName, params.get("generatorParams"))
+    constructor(params: IObject<Any>) {
+        val IOC = params.get<IOC>(IOCField)
+        val strategyName = params.get<String>(strategyField)
+        if (params.keys().contains(configField)) {
+            generator = IOC.resolve(strategyName, params.get(configField))
         } else {
-            generator = IOC.resolve<IOCStrategy>(iocName)
+            generator = IOC.resolve<IOCStrategy>(strategyName)
         }
 
-        if (params.keys().contains("objectsPreset")) {
-            val templates = params.get<IObject<Any>>("objectsPreset")
+        if (params.keys().contains(presetField)) {
+            val templates = params.get<IObject<Any>>(presetField)
 
             for (key in templates.keys()) {
                 knownObjects.put(key, generator.getInstance(templates.get<IObject<Any>>(key)))

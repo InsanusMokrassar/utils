@@ -1,17 +1,13 @@
 package com.github.insanusmokrassar.utils.IOC
 
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
+import com.github.insanusmokrassar.utils.*
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
 import com.github.insanusmokrassar.utils.ClassExtractor.extract
 import com.github.insanusmokrassar.utils.IOC.exceptions.ResolveStrategyException
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
 
 import java.util.HashMap
-
-val strategiesKey = "strategies"
-val nameKey = "name"
-val packageKey = "package"
-val configKey = "config"
 
 /**
  * <pre>
@@ -28,22 +24,26 @@ val configKey = "config"
  */
 @Throws(IllegalArgumentException::class)
 fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
-    val strategiesList = config.get<List<IObject<Any>>>(strategiesKey)
+    val strategiesList = config.get<List<IObject<Any>>>(strategiesField)
     strategiesList.forEach {
         val args: Array<Any>
-        if (it.keys().contains(configKey)) {
+        if (it.keys().contains(configField)) {
             args = try {
-                it.get<List<Any>>(configKey).toTypedArray()
+                it.get<List<Any>>(configField).toTypedArray()
             } catch (e: ClassCastException) {
-                arrayOf(it.get<Any>(configKey))
+                try {
+                    val arg = it.get<IObject<Any>>(configField)
+                    arg.put(IOCField, into)
+                } catch (e: Exception) {}
+                arrayOf(it.get<Any>(configField))
             }
         } else {
             args = arrayOf()
         }
         into.register(
-                it.get(nameKey),
+                it.get(nameField),
                 extract(
-                        it.get(packageKey),
+                        it.get(packageField),
                         *args
                 )
         )
