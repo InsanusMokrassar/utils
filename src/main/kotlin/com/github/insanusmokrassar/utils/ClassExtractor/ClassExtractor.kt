@@ -1,7 +1,6 @@
 package com.github.insanusmokrassar.utils.ClassExtractor
 
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
-import com.insogroup.utils.ClassExtractor.exceptions.*
 
 import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
