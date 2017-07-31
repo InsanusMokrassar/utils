@@ -13,7 +13,7 @@ class OneObjectIOCStrategy(protected var targetObject: Any) : IOCStrategy {
      * @throws ResolveStrategyException
      */
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
-        return targetObject
+    override fun <T> getInstance(vararg args: Any): T {
+        return targetObject as T
     }
 }

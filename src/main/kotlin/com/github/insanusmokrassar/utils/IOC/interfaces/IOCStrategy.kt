@@ -15,5 +15,5 @@ interface IOCStrategy {
      * @throws ResolveStrategyException Throw when instance can't be resolved
      */
     @Throws(ResolveStrategyException::class)
-    fun getInstance(vararg args: Any): Any
+    fun <T> getInstance(vararg args: Any): T
 }

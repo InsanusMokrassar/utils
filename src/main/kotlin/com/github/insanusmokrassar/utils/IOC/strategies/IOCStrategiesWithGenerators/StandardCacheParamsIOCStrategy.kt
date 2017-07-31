@@ -54,7 +54,7 @@ class StandardCacheParamsIOCStrategy : IOCStrategy {
      * @throws ResolveStrategyException
      */
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
+    override fun <T> getInstance(vararg args: Any): T {
 
         try {
             if (args.isNotEmpty()) {

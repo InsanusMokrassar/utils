@@ -3,8 +3,7 @@ package com.github.insanusmokrassar.utils.IOC
 import com.github.insanusmokrassar.iobjectk.exceptions.ReadException
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
-import com.github.insanusmokrassar.utils.ClassExtractor.ClassExtractor
-import com.github.insanusmokrassar.utils.ClassExtractor.ClassExtractor.extract
+import com.github.insanusmokrassar.utils.ClassExtractor.extract
 import com.github.insanusmokrassar.utils.IOC.exceptions.ResolveStrategyException
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
 
@@ -103,13 +102,13 @@ class IOC {
      * @throws ResolveStrategyException Throw when strategy is not registered
     </T> */
     @Throws(ResolveStrategyException::class)
-    fun <T: Any> resolve(key: String, vararg args: Any): T {
+    fun <T> resolve(key: String, vararg args: Any): T {
         try {
             val strategy = strategies[key]
-            return strategy!!.getInstance(*args) as T
+            return strategy!!.getInstance<T>(*args)
         } catch (e: NullPointerException) {
             try {
-                return ClassExtractor.extract<T>(key, *args)
+                return extract<T>(key, *args)
             } catch (e1: ClassExtractException) {
                 throw ResolveStrategyException("Can't find strategy by key or extract class: $key", e)
             }

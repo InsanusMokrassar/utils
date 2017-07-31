@@ -1,8 +1,8 @@
 package com.github.insanusmokrassar.utils.initialisator.realisations
 
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
-import com.github.insanusmokrassar.utils.ClassExtractor.ClassExtractor
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
+import com.github.insanusmokrassar.utils.ClassExtractor.extract
 import com.github.insanusmokrassar.utils.initialisator.exceptions.InitializableException
 import com.github.insanusmokrassar.utils.initialisator.interfaces.Initializable
 
@@ -33,7 +33,7 @@ class StandardInitialisator: Initializable {
     override fun initObject(from: IObject<Any>) {
         try {
             from.keys().forEach {
-                val targetInitializator = ClassExtractor.extract<Initializable>(it)
+                val targetInitializator = extract<Initializable>(it)
                 targetInitializator.initObject(from.get(it))
             }
         } catch (e: ClassExtractException) {

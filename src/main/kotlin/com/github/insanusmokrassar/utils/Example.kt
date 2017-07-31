@@ -51,9 +51,9 @@ fun main(args: Array<String>) {
     IOC.subscribe(outputStreamCallback)
 
     IOC.register("Example", object: IOCStrategy {
-        override fun getInstance(vararg args: Any): Any {
+        override fun <T> getInstance(vararg args: Any): T {
             println("Try to get instance")
-            return outputStreamCallback
+            return outputStreamCallback as T
         }
     })
 

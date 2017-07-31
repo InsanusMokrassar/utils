@@ -1,8 +1,8 @@
 package com.github.insanusmokrassar.utils.IOC.initializators
 
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
-import com.github.insanusmokrassar.utils.ClassExtractor.ClassExtractor
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
+import com.github.insanusmokrassar.utils.ClassExtractor.extract
 import com.github.insanusmokrassar.utils.IOC.IOC
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
 import com.github.insanusmokrassar.utils.initialisator.exceptions.InitializableException
@@ -35,7 +35,7 @@ class CustomIOCStrategyInitialisator(private val IOC: IOC): Initializable {
                 for (currentDependency in dependenciesKeys) {
                     val currentDependencyParam = dependencies.get<Any>(currentDependency)
                     try {
-                        val strategy = ClassExtractor.extract<IOCStrategy>(key, currentDependencyParam)
+                        val strategy = extract<IOCStrategy>(key, currentDependencyParam)
                         IOC.register(currentDependency, strategy)
                     } catch (e: ClassExtractException) {
                         throw InitializableException("Can't create IOCStrategy with params: " +
@@ -49,7 +49,7 @@ class CustomIOCStrategyInitialisator(private val IOC: IOC): Initializable {
                 dependencies.forEach {
                     try {
                         if (it is String) {
-                            val strategy = ClassExtractor.extract<IOCStrategy>(key)
+                            val strategy = extract<IOCStrategy>(key)
                             IOC.register(it, strategy)
                         }
                     } catch (e1: ClassExtractException) {

@@ -52,13 +52,11 @@ class StandardCacheObjectIOCStrategy : IOCStrategy {
      * @throws ResolveStrategyException
      */
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
-
-
+    override fun <T> getInstance(vararg args: Any): T {
         val name = args[0] as String
 
         if (knownObjects.containsKey(name)) {
-            return knownObjects[name]!!
+            return knownObjects[name]!! as T
         }
 
         val params: Array<Any>?
@@ -75,7 +73,7 @@ class StandardCacheObjectIOCStrategy : IOCStrategy {
                 result = generator.getInstance(params)
             }
             knownObjects.put(name, result)
-            return result
+            return result as T
         } catch (e: ResolveStrategyException) {
             throw ResolveStrategyException("Can't resolve new object by params", e)
         }

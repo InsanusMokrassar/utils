@@ -38,13 +38,13 @@ class FixedExecutorServiceStrategy : IOCStrategy {
     }
 
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
+    override fun <T> getInstance(vararg args: Any): T {
         val targetTaskName = args[0] as String
         if (executorServices.containsKey(targetTaskName)) {
-            return executorServices[targetTaskName]!!
+            return executorServices[targetTaskName]!! as T
         }
         val executorService = Executors.newFixedThreadPool(defaultThreadsCount!!)
         executorServices.put(targetTaskName, executorService)
-        return executorService
+        return executorService as T
     }
 }

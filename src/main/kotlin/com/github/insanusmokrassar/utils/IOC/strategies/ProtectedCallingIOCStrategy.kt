@@ -3,7 +3,8 @@ package com.github.insanusmokrassar.utils.IOC.strategies
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
 import com.github.insanusmokrassar.iobjectk.interfaces.has
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
-import com.github.insanusmokrassar.utils.ClassExtractor.ClassExtractor
+import com.github.insanusmokrassar.utils.ClassExtractor.extract
+import com.github.insanusmokrassar.utils.ClassExtractor.getClass
 import com.github.insanusmokrassar.utils.IOC.IOC
 import com.github.insanusmokrassar.utils.IOC.exceptions.ResolveStrategyException
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
@@ -40,7 +41,7 @@ class ProtectedCallingIOCStrategy : IOCStrategy {
         if (params.has(TARGET_IOC_STRATEGY_PARAMS_FIELD)) {
             strategyParams = params.get(TARGET_IOC_STRATEGY_PARAMS_FIELD)
         }
-        targetIOCStrategy = ClassExtractor.extract<IOCStrategy>(targetIOCStrategyClassPath, strategyParams)
+        targetIOCStrategy = extract<IOCStrategy>(targetIOCStrategyClassPath, strategyParams)
         val requiredAnnotationsInJSON = params.get<List<Any>>(REQUIRED_ANNOTATIONS_FIELD)
         requiredAnnotations = ArrayList<String>()
         for (currentObject in requiredAnnotationsInJSON) {
@@ -57,7 +58,7 @@ class ProtectedCallingIOCStrategy : IOCStrategy {
      * @throws ResolveStrategyException
      */
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
+    override fun <T> getInstance(vararg args: Any): T {
         val iocClass = IOC::class.java.canonicalName
         val stackTraceElements = Thread.currentThread().stackTrace
         var targetClassName: String? = null
@@ -68,7 +69,7 @@ class ProtectedCallingIOCStrategy : IOCStrategy {
                     break
                 }
             }
-            val targetClass = ClassExtractor.getClass<Any>(targetClassName!!)
+            val targetClass = getClass<Any>(targetClassName!!)
             val tempReqAnnotations = ArrayList(requiredAnnotations!!)
             targetClass.annotations.forEach {
                 if (tempReqAnnotations.contains(it.toString())) {

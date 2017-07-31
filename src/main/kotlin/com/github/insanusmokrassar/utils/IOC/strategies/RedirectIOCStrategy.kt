@@ -10,7 +10,7 @@ import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
  */
 class RedirectIOCStrategy(private val IOC: IOC, private val targetStrategy: String) : IOCStrategy {
     @Throws(ResolveStrategyException::class)
-    override fun getInstance(vararg args: Any): Any {
-        return IOC.resolve<Any>(targetStrategy, *args)
+    override fun <T> getInstance(vararg args: Any): T {
+        return IOC.resolve<T>(targetStrategy, *args)
     }
 }
