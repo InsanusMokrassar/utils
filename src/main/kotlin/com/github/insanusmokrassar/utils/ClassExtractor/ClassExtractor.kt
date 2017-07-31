@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  * @throws ClassExtractException
 </T> */
 @Throws(ClassExtractException::class)
-fun <T> extract(path: String, vararg constructorArgs: Any): T {
+fun <T> extract(path: String, vararg constructorArgs: Any?): T {
     val targetClass = getClass<T>(path)
     targetClass.constructors.forEach {
         if (it.parameterTypes.size != constructorArgs.size) {

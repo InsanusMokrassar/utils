@@ -31,7 +31,7 @@ class CacheIOCStrategy(protected var targetClassPath: String) : IOCStrategy {
         val constructorArgs = arrayOfNulls<Any>(args.size - 1)//first argument is classpath
         System.arraycopy(args, 1, constructorArgs, 0, constructorArgs.size)
         try {
-            val instance = extract<Any>(targetClassPath, constructorArgs)
+            val instance = extract<Any>(targetClassPath, *constructorArgs)
             instances.put(name, instance)
             return instance as T
         } catch (e: ClassExtractException) {
