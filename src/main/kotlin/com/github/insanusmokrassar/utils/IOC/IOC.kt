@@ -1,6 +1,5 @@
 package com.github.insanusmokrassar.utils.IOC
 
-import com.github.insanusmokrassar.iobjectk.exceptions.ReadException
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
 import com.github.insanusmokrassar.utils.ClassExtractor.extract
@@ -35,7 +34,7 @@ fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
         if (it.keys().contains(configKey)) {
             args = try {
                 it.get<List<Any>>(configKey).toTypedArray()
-            } catch (e: ReadException) {
+            } catch (e: ClassCastException) {
                 arrayOf(it.get<Any>(configKey))
             }
         } else {
