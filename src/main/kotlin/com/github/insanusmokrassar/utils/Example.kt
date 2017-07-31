@@ -3,9 +3,27 @@ package com.github.insanusmokrassar.utils
 import com.github.insanusmokrassar.utils.FilesDownloader.FilesDownloader
 import com.github.insanusmokrassar.utils.IOC.IOC
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
+import java.io.FileInputStream
 
 import java.io.IOException
+import java.util.logging.LogManager
 
+
+/**
+ * Need "LOGGER_CONFIG_PATH" environment variable which set the place where was put .properties file with config of logger
+ */
+fun loadLoggerConfig() {
+    FileInputStream(System.getenv("LOGGER_CONFIG_PATH")).use {
+        LogManager.getLogManager().readConfiguration(it)
+    }
+}
+
+/**
+ * Need file with logger config
+ */
+fun loadLoggerConfig(file: FileInputStream) {
+    LogManager.getLogManager().readConfiguration(file)
+}
 
 private val exampleOfCustomStrategyInitializerConfig = "{\n" +
         "   \"com.insogroup.utils.IOC.initializators.CustomIOCStrategyInitializator\":{\n" +
