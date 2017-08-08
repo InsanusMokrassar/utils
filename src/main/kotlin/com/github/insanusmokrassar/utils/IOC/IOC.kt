@@ -31,10 +31,6 @@ fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
             args = try {
                 it.get<List<Any>>(configField).toTypedArray()
             } catch (e: ClassCastException) {
-                try {
-                    val arg = it.get<IObject<Any>>(configField)
-                    arg.put(IOCField, into)
-                } catch (e: Exception) {}
                 arrayOf(it.get<Any>(configField))
             }
         } else {

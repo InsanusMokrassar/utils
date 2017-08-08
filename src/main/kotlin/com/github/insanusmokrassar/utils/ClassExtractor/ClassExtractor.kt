@@ -38,6 +38,25 @@ fun <T> extract(path: String, vararg constructorArgs: Any?): T {
     throw ClassExtractException("Can't find constructor for this args")
 }
 
+@Throws(IllegalArgumentException::class, IllegalStateException::class)
+fun reorderArguments(path: String, vararg constructorArgs: Any?) {
+    val targetClass = getClass<Any>(path)
+    targetClass.constructors.forEach {
+        val leftArgs = arrayListOf(*constructorArgs).map { if (it == null) Any::class.java else it::class.java }
+        it.parameterTypes.forEach {
+            parameter ->
+            leftArgs.forEach {
+                currentArg ->
+                try {
+                    currentArg.asSubclass(parameter)
+                } catch (e: ClassCastException) {
+
+                }
+            }
+        }
+    }
+}
+
 @Throws(ClassExtractException::class)
 fun <T> getClass(path: String): Class<T> {
     try {
