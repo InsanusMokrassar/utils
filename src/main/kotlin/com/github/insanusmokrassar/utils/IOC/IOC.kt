@@ -42,7 +42,7 @@ fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
         }
         into.register(
                 it.get(nameField),
-                extract(
+                into.resolve(
                         it.get(packageField),
                         *args
                 )
@@ -108,12 +108,10 @@ class IOC {
             return strategy!!.getInstance<T>(*args)
         } catch (e: NullPointerException) {
             try {
-                return extract<T>(key, *args)
+                return extract(key, *args)
             } catch (e1: ClassExtractException) {
                 throw ResolveStrategyException("Can't find strategy by key or extract class: $key", e)
             }
-
         }
-
     }
 }
