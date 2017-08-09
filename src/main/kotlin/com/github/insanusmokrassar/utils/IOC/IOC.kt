@@ -9,6 +9,8 @@ import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
 
 import java.util.HashMap
 
+private val iocInstances = HashMap<String, IOC>()
+
 /**
  * <pre>
  *     {
@@ -23,7 +25,8 @@ import java.util.HashMap
  * </pre>
  */
 @Throws(IllegalArgumentException::class)
-fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
+fun loadIOCConfig(config: IObject<Any>, name: String = defaultField): IOC {
+    val into = getOrCreateIOCInstance(name)
     val strategiesList = config.get<List<IObject<Any>>>(strategiesField)
     strategiesList.forEach {
         val args: Array<Any>
@@ -47,12 +50,19 @@ fun loadIOCConfig(config: IObject<Any>, into: IOC = IOC()): IOC {
     return into
 }
 
+fun getOrCreateIOCInstance(name: String): IOC {
+    if (!iocInstances.containsKey(name)) {
+        iocInstances.put(name, IOC())
+    }
+    return iocInstances[name]!!
+}
+
 /**
  * IOC container using for resolving some dependencies
  */
 class IOC {
     private val strategies: MutableMap<String, IOCStrategy> = HashMap()
-    private val subscribers: MutableList<(String) -> Unit> = ArrayList() 
+    private val subscribers: MutableList<(String) -> Unit> = ArrayList()
 
     /**
      * Register dependency in system

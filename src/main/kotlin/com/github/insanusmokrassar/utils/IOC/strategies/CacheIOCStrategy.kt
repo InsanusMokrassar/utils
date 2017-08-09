@@ -1,30 +1,57 @@
 package com.github.insanusmokrassar.utils.IOC.strategies
 
 import com.github.insanusmokrassar.iobjectk.interfaces.IObject
+import com.github.insanusmokrassar.utils.*
 import com.github.insanusmokrassar.utils.ClassExtractor.exceptions.ClassExtractException
-import com.github.insanusmokrassar.utils.ClassExtractor.extract
+import com.github.insanusmokrassar.utils.IOC.IOC
 import com.github.insanusmokrassar.utils.IOC.exceptions.ResolveStrategyException
+import com.github.insanusmokrassar.utils.IOC.getOrCreateIOCInstance
 import com.github.insanusmokrassar.utils.IOC.interfaces.IOCStrategy
 
 import java.util.HashMap
 
-class CacheIOCStrategy() : IOCStrategy {
+class CacheIOCStrategy(config: IObject<Any>) : IOCStrategy {
 
     protected var instances: MutableMap<String, Any> = HashMap()
+    protected val ioc: IOC = getOrCreateIOCInstance(config.get(IOCNameField))
 
     /**
-     * If as config set object, strategy will await next:
+     * Await:
      * <pre>
      *     {
-     *          "NAME OF DEPENDENCY" : {
-     *              "package"
-     *          }
+     *          "IOCName": "ioc name",
+     *          "preset": [
+     *              {
+     *                  "name": "NAME OF FIRST PRESET",
+     *                  "package": "CLASS PATH",
+     *                  "args": [
+     *                      ARGS,
+     *                      OF,
+     *                      FIRST,
+     *                      PRESET
+     *                  ]
+     *              }
+     *          ]
      *     }
      * </pre>
      */
-    constructor(preset: IObject<Any>): this() {
-        preset.keys().forEach {
-
+    init {
+        if (config.keys().contains(presetField)) {
+            val presetObject = config.get<List<IObject<Any>>>(presetField)
+            presetObject.forEach {
+                val args: Array<Any>
+                if (it.keys().contains(argsField)) {
+                    args = it.get<List<Any>>(argsField).toTypedArray()
+                } else {
+                    args = Array(0, {})
+                }
+                getInstance(
+                        it.get<String>(nameField),
+                        it.get<String>(packageField),
+                        *args
+                )
+//                getInstance(it, *currentPresetArgs.toTypedArray())
+            }
         }
     }
 
@@ -37,18 +64,18 @@ class CacheIOCStrategy() : IOCStrategy {
      */
     @Throws(ResolveStrategyException::class)
     override fun <T> getInstance(vararg args: Any): T {
-        if (args.size == 0) {
+        if (args.isEmpty()) {
             return getInstance("")
         }
         val name = args[0] as String
         if (instances.containsKey(name)) {
             return instances[name]!! as T
         }
-        val constructorArgs = arrayOfNulls<Any>(args.size - 1)//first argument is classpath
-        System.arraycopy(args, 1, constructorArgs, 0, constructorArgs.size)
+        val targetClassPath = args[1] as String
+        val constructorArgs = args.sliceArray(2..args.size-1)
         try {
-            val instance = IOC.resolve<T>(targetClassPath, *constructorArgs)
-            instances.put(name, instance)
+            val instance = ioc.resolve<T>(targetClassPath, *constructorArgs)
+            instances.put(name, instance!!)
             return instance
         } catch (e: ClassExtractException) {
             throw ResolveStrategyException("Can't find variable for this name and create new instance", e)
